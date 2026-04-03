@@ -1,0 +1,58 @@
+# ─────────────────────────────────────────────
+# Project V3.1 — CSRNet .gitignore
+# ─────────────────────────────────────────────
+
+# Dataset (never commit raw data)
+datasets/
+
+# Generated density maps (reproducible from script)
+outputs/density_maps/
+
+# Model checkpoints
+checkpoints/
+
+# Video outputs
+outputs/video/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Conda / virtualenv
+.env
+.venv
+env/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs and CSVs (optional — keep if you want training logs in repo)
+# outputs/evaluation/*.csv
+
+# Plots and figures (optional — keep if you want portfolio visuals in repo)
+# outputs/evaluation/*.png
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

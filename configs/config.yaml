@@ -1,0 +1,85 @@
+# ─────────────────────────────────────────────
+# Project V3.1 — CSRNet Crowd Density Estimation
+# Master Configuration File
+# ─────────────────────────────────────────────
+
+dataset:
+  root: "datasets/ShanghaiTech"
+  part_A:
+    train_images: "part_A/train_data/images"
+    train_gt:     "part_A/train_data/ground_truth"
+    test_images:  "part_A/test_data/images"
+    test_gt:      "part_A/test_data/ground_truth"
+  part_B:
+    train_images: "part_B/train_data/images"
+    train_gt:     "part_B/train_data/ground_truth"
+    test_images:  "part_B/test_data/images"
+    test_gt:      "part_B/test_data/ground_truth"
+
+density_maps:
+  output_dir: "outputs/density_maps"
+  part_A:
+    method: "adaptive"        # k-NN based sigma
+    k_nearest: 3              # number of neighbours for adaptive sigma
+    min_sigma: 1.0            # floor to avoid zero-sigma kernels
+    beta: 0.3                 # sigma = beta * avg_k_nearest_dist
+  part_B:
+    method: "fixed"
+    fixed_sigma: 15.0         # fixed Gaussian sigma for sparse crowds
+
+model:
+  frontend: "vgg16"           # pretrained VGG-16 first 10 conv layers
+  frontend_pretrained: true
+  backend_dilation_rates: [2, 2, 2, 2, 2, 2]
+  backend_out_channels: 1
+
+training:
+  device: "cpu"               # training on M1 CPU
+  batch_size: 1
+  num_workers: 0
+  epochs: 200
+  learning_rate: 1.0e-6
+  weight_decay: 5.0e-4
+  optimizer: "adam"
+  lr_scheduler:
+    type: "StepLR"
+    step_size: 50
+    gamma: 0.5
+  crop_size: 256              # random crop during training augmentation
+  val_split: 0.1              # fraction of train set held out for validation
+  seed: 42
+  part_A:
+    checkpoint_dir: "checkpoints"
+    best_checkpoint: "checkpoints/partA_best.pth"
+    log_csv: "outputs/evaluation/partA_train_log.csv"
+  part_B:
+    checkpoint_dir: "checkpoints"
+    best_checkpoint: "checkpoints/partB_best.pth"
+    log_csv: "outputs/evaluation/partB_train_log.csv"
+
+evaluation:
+  device: "mps"               # inference on MPS
+  num_workers: 0
+  batch_size: 1
+  output_dir: "outputs/evaluation"
+
+inference:
+  device: "mps"
+  input_width: 640            # resize video frames to this width
+  colormap: "jet"
+  heatmap_alpha: 0.5          # overlay transparency
+  count_window_size: 30       # rolling window for count-over-time graph
+  font_scale: 1.0
+  font_thickness: 2
+
+video:
+  input_path: "inputs/crowd_video.mp4"   # ← path to your source video
+  output_path: "outputs/video/demo_output.mp4"
+  fps: 25
+  graph_width: 320            # width of count-over-time panel in pixels
+  graph_height: 480           # height of count-over-time panel in pixels
+
+paths:
+  output_dir: "outputs"
+  checkpoint_dir: "checkpoints"
+  density_map_dir: "outputs/density_maps"
