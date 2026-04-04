@@ -76,6 +76,7 @@ video:
   input_path: "inputs/crowd_video.mp4"   # ← path to your source video
   output_path: "outputs/video/demo_output.mp4"
   fps: 25
+  pseudo_video_fps: 4
   graph_width: 320            # width of count-over-time panel in pixels
   graph_height: 480           # height of count-over-time panel in pixels
 
